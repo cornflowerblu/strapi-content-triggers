@@ -75,5 +75,5 @@ jobs:
 
       - name: Rollout Pods and Verify
         run: |
-          kubectl rollout restart deployment/content-sync-v2 -n content
-          kubectl rollout status deployment/content-sync-v2 -n content
+          kubectl rollout restart deployment/content-sync -n content
+          kubectl rollout status deployment/content-sync -n content
