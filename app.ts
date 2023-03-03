@@ -17,4 +17,6 @@ app.use(cookieParser())
 app.use('/health', healthCheckRouter)
 app.use('/content/sync', syncRouter)
 
+console.log(`Listening on port ${process.env.PORT}`)
+
 module.exports = app
