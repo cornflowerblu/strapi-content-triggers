@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres
+    ports:
+      - 8001:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+  app:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - 8000:8080
+    environment:
+      SYNC_KEY: abcdefg
+      NODE_ENV: production
+      PORT: 8080
+  test:
+    build:
+      context: .
+      dockerfile: test.Dockerfile
+    depends_on:
+      - db
+      - app
+    ports:
+      - 8888:8888
+    environment:
+      SYNC_KEY: abcdefg
+      NODE_ENV: production
+      TEST_HOST: app
+      PORT: 8080
