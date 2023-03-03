@@ -11,32 +11,32 @@ syncRouter.get('/', async (req: Request, res: Response) => {
     })
 
   const data = JSON.stringify({
-    "ref": "content"
-  });
+    ref: 'content',
+  })
 
   const config = {
     method: 'post',
     url: 'https://api.github.com/repos/cornflowerblu/sunny-nextjs/actions/workflows/content.yml/dispatches',
     headers: {
-      'Accept': 'application/vnd.github+json',
-      'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
       'X-GitHub-Api-Version': '2022-11-28',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    data: data
-  };
+    data: data,
+  }
 
   try {
     await axios(config)
     return res.status(200).json({
       message: 'Success',
-      data: (response: AxiosResponse) => response.data
+      data: (response: AxiosResponse) => response.data,
     })
   } catch (error) {
     console.error(error)
     return res.status(500).json({
       message: 'Error',
-      data: (response: AxiosResponse) => response.data
+      data: (response: AxiosResponse) => response.data,
     })
   }
 })
