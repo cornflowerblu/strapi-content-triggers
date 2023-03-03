@@ -31,18 +31,20 @@ syncRouter.post('/', async (req: Request, res: Response) => {
 
     try {
       await axios(config)
+      console.log('Success')
       return res.status(200).json({
         message: 'Success',
         data: (response: AxiosResponse) => response.data,
       })
     } catch (error) {
-      console.error(error)
+      console.error(JSON.stringify(error))
       return res.status(500).json({
         message: 'Error',
         data: (response: AxiosResponse) => response.data,
       })
     }
   } else {
+    console.error('Not a publish or unpublish event')
     return res.status(500).json({
       message: 'Error',
       data: 'Not a publish or unpublish event',
