@@ -3,8 +3,9 @@ import axios, { AxiosResponse } from 'axios'
 
 const syncRouter = express.Router()
 
-syncRouter.get('/', async (req: Request, res: Response) => {
-  if (req.query.key !== process.env.WEBHOOK_KEY)
+syncRouter.post('/', async (req: Request, res: Response) => {
+  const header = req.header('X-Webhook-Key')
+  if (header !== process.env.WEBHOOK_KEY)
     return res.status(401).json({
       message: 'Unauthorized',
       status: res.statusCode,
