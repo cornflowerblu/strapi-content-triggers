@@ -32,7 +32,7 @@ jobs:
         run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/_meta
 
       - name: Build container image
-        run: docker build -t registry.digitalocean.com/always-sunny/content-sync-2:latest -t registry.digitalocean.com/always-sunny/content-sync-2:$(echo $GITHUB_SHA | head -c7) .
+        run: docker build -t registry.digitalocean.com/always-sunny/content-sync:latest -t registry.digitalocean.com/always-sunny/content-sync:$(echo $GITHUB_SHA | head -c7) .
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
