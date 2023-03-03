@@ -50,7 +50,6 @@ syncRouter.post('/', async (req: Request, res: Response) => {
       data: 'Not a publish or unpublish event',
     })
   }
-
 })
 
 export default syncRouter
