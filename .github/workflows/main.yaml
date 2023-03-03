@@ -26,13 +26,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Update SHA
         run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/_meta
 
       - name: Build container image
-        run: docker build -t registry.digitalocean.com/always-sunny/algolia-sync-2:latest -t registry.digitalocean.com/always-sunny/algolia-sync-2:$(echo $GITHUB_SHA | head -c7) .
+        run: docker build -t registry.digitalocean.com/always-sunny/content-sync-2:latest -t registry.digitalocean.com/always-sunny/content-sync-2:$(echo $GITHUB_SHA | head -c7) .
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
@@ -43,9 +43,10 @@ jobs:
         run: doctl registry login --expiry-seconds 600
 
       - name: Push image to DigitalOcean Container Registry
-        run: docker push registry.digitalocean.com/always-sunny/algolia-sync-2 -a
+        run: docker push registry.digitalocean.com/always-sunny/content-sync -a
+      
       - name: Make sure latest tag actually got pushed
-        run: docker push registry.digitalocean.com/always-sunny/algolia-sync-2:latest
+        run: docker push registry.digitalocean.com/always-sunny/content-sync:latest
 
   deploy:
     name: Deploy
@@ -66,16 +67,13 @@ jobs:
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 k8s-1-24-8-do-0-sfo3-1671928634245
 
       - name: Install kubectl
-        run: |
-          sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
-          echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-          sudo apt-get update
-          sudo apt-get install kubectl
+        uses: azure/setup-kubectl@v3
+        id: install
 
       - name: Update Deployment and Service
         run: kubectl apply -f $GITHUB_WORKSPACE/k8s/deployment.yml
 
       - name: Rollout Pods and Verify
         run: |
-          kubectl rollout restart deployment/algolia-sync-v2 -n algolia
-          kubectl rollout status deployment/algolia-sync-v2 -n algolia
+          kubectl rollout restart deployment/content-sync-v2 -n content
+          kubectl rollout status deployment/content-sync-v2 -n content

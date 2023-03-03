@@ -3,18 +3,19 @@ kind: Deployment
 metadata:
   annotations:
     deployment.kubernetes.io/revision: "5"
-    field.cattle.io/publicEndpoints: '[{"addresses":["146.190.14.75"],"port":443,"protocol":"HTTPS","serviceName":"algolia:algolia-sync-v2","ingressName":"algolia:ingress-algolia-v2","hostname":"algolia.rurich.dev","allNodes":false}]'
-  creationTimestamp: "2023-02-20T20:43:27Z"
-  generation: 10
+    field.cattle.io/description: A service to automatically sync content
+  creationTimestamp: "2023-03-03T06:21:36Z"
+  generation: 6
   labels:
-    workload.user.cattle.io/workloadselector: apps.deployment-algolia-algolia-sync-v2
+    workload.user.cattle.io/workloadselector: apps.deployment-content-content-sync
   managedFields:
   - apiVersion: apps/v1
     fieldsType: FieldsV1
     fieldsV1:
       f:metadata:
         f:annotations:
-          f:field.cattle.io/publicEndpoints: {}
+          .: {}
+          f:field.cattle.io/description: {}
         f:labels:
           .: {}
           f:workload.user.cattle.io/workloadselector: {}
@@ -40,15 +41,11 @@ metadata:
           f:spec:
             f:affinity: {}
             f:containers:
-              k:{"name":"algolia-sync"}:
+              k:{"name":"content-sync"}:
                 .: {}
                 f:env:
                   .: {}
                   k:{"name":"PORT"}:
-                    .: {}
-                    f:name: {}
-                    f:value: {}
-                  k:{"name":"POSTGRES_SSL"}:
                     .: {}
                     f:name: {}
                     f:value: {}
@@ -84,13 +81,12 @@ metadata:
             f:terminationGracePeriodSeconds: {}
     manager: rancher
     operation: Update
-    time: "2023-02-20T20:53:18Z"
+    time: "2023-03-03T06:37:31Z"
   - apiVersion: apps/v1
     fieldsType: FieldsV1
     fieldsV1:
       f:metadata:
         f:annotations:
-          .: {}
           f:deployment.kubernetes.io/revision: {}
       f:status:
         f:availableReplicas: {}
@@ -119,16 +115,16 @@ metadata:
     manager: kube-controller-manager
     operation: Update
     subresource: status
-    time: "2023-02-20T20:56:22Z"
-  name: algolia-sync-v2
-  namespace: algolia
+    time: "2023-03-03T06:37:51Z"
+  name: content-sync
+  namespace: content
 spec:
   progressDeadlineSeconds: 600
   replicas: 2
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      workload.user.cattle.io/workloadselector: apps.deployment-algolia-algolia-sync-v2
+      workload.user.cattle.io/workloadselector: apps.deployment-content-content-sync
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -137,31 +133,26 @@ spec:
   template:
     metadata:
       annotations:
-        cattle.io/timestamp: "2023-02-20T20:56:13Z"
+        cattle.io/timestamp: "2023-03-03T06:37:29Z"
       creationTimestamp: null
       labels:
-        workload.user.cattle.io/workloadselector: apps.deployment-algolia-algolia-sync-v2
+        workload.user.cattle.io/workloadselector: apps.deployment-content-content-sync
     spec:
       affinity: {}
       containers:
       - env:
         - name: PORT
           value: "8080"
-        - name: POSTGRES_SSL
-          value: "true"
         envFrom:
         - secretRef:
-            name: db
+            name: platform
             optional: false
-        - secretRef:
-            name: api-creds
-            optional: false
-        image: registry.digitalocean.com/always-sunny/algolia-sync-2
+        image: registry.digitalocean.com/always-sunny/content-sync
         imagePullPolicy: Always
-        name: algolia-sync
+        name: content-sync
         ports:
         - containerPort: 8080
-          name: 8080tcp
+          name: 8080tcp32141
           protocol: TCP
         readinessProbe:
           failureThreshold: 3
@@ -183,19 +174,19 @@ spec:
 status:
   availableReplicas: 2
   conditions:
-  - lastTransitionTime: "2023-02-20T20:56:26Z"
-    lastUpdateTime: "2023-02-20T20:56:26Z"
+  - lastTransitionTime: "2023-03-03T06:24:09Z"
+    lastUpdateTime: "2023-03-03T06:24:09Z"
     message: Deployment has minimum availability.
     reason: MinimumReplicasAvailable
     status: "True"
     type: Available
-  - lastTransitionTime: "2023-02-20T20:56:18Z"
-    lastUpdateTime: "2023-02-20T20:56:26Z"
-    message: ReplicaSet "algolia-sync-v2-6bbbf45fff" has successfully progressed.
+  - lastTransitionTime: "2023-03-03T06:21:36Z"
+    lastUpdateTime: "2023-03-03T06:37:51Z"
+    message: ReplicaSet "content-sync-5445fcb765" has successfully progressed.
     reason: NewReplicaSetAvailable
     status: "True"
     type: Progressing
-  observedGeneration: 10
+  observedGeneration: 6
   readyReplicas: 2
   replicas: 2
   updatedReplicas: 2
@@ -204,9 +195,9 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    field.cattle.io/targetWorkloadIds: '["algolia/algolia-sync-v2"]'
+    field.cattle.io/targetWorkloadIds: '["content/content-sync"]'
     management.cattle.io/ui-managed: "true"
-  creationTimestamp: "2023-02-20T20:43:27Z"
+  creationTimestamp: "2023-03-03T06:29:13Z"
   managedFields:
   - apiVersion: v1
     fieldsType: FieldsV1
@@ -218,7 +209,7 @@ metadata:
           f:management.cattle.io/ui-managed: {}
         f:ownerReferences:
           .: {}
-          k:{"uid":"140c5a6a-3e80-4ce8-8c91-7adfd324f24d"}: {}
+          k:{"uid":"0e831b7d-96a3-40d4-8b22-9e6b403c43eb"}: {}
       f:spec:
         f:internalTrafficPolicy: {}
         f:ports:
@@ -234,30 +225,30 @@ metadata:
         f:type: {}
     manager: rancher
     operation: Update
-    time: "2023-02-20T20:43:27Z"
-  name: algolia-sync-v2
-  namespace: algolia
+    time: "2023-03-03T06:29:13Z"
+  name: content-sync
+  namespace: content
   ownerReferences:
   - apiVersion: apps/v1
     controller: true
     kind: Deployment
-    name: algolia-sync-v2
-    uid: 140c5a6a-3e80-4ce8-8c91-7adfd324f24d
+    name: content-sync
+    uid: 0e831b7d-96a3-40d4-8b22-9e6b403c43eb
 spec:
-  clusterIP: 10.245.214.195
+  clusterIP: 10.245.46.244
   clusterIPs:
-  - 10.245.214.195
+  - 10.245.46.244
   internalTrafficPolicy: Cluster
   ipFamilies:
   - IPv4
   ipFamilyPolicy: SingleStack
   ports:
-  - name: 8080tcp
+  - name: 8080tcp32141
     port: 8080
     protocol: TCP
     targetPort: 8080
   selector:
-    workload.user.cattle.io/workloadselector: apps.deployment-algolia-algolia-sync-v2
+    workload.user.cattle.io/workloadselector: apps.deployment-content-content-sync
   sessionAffinity: None
   type: ClusterIP
 status:
